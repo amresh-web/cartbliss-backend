@@ -1,27 +1,16 @@
+
 const express = require("express");
+
+require("dotenv").config();
+
+require('./config/db');
+
 const app = express();
+app.use(express.json);
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5200;
 
-const product_routes = require("./routes/product");
-
-const connectDB = require("./db/connect");
-
-app.get("/", (req, res) => {
-  res.send("Hi, I am Live!");
+app.listen(PORT, () => {
+  console.log(`My server is running at port ${PORT}`);
 });
 
-app.use("/api/product", product_routes);
-
-const start = async () => {
-  try {
-    await connectDB();
-    app.listen(PORT, () => {
-      console.log(`${PORT} I am connected`);
-    });
-  } catch (err) {
-    console.log(err);
-  }
-};
-
-start();
