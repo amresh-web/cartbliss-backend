@@ -1,8 +1,8 @@
 const express = require("express");
 
-//require("dotenv").config();
+require("dotenv").config();
 
-//require("./config/db");
+require("./config/db");
 
 const routes = require("./routes/routes");
 const app = express();
