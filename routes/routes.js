@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
-router.use('/category', require('./category.routes'));
+router.use("/category", require("./category.routes"));
+router.use("/user", require("./user.routes"));
 
 // const Category = require("../models/category.model");
 
