@@ -1,27 +1,49 @@
-const Category = require("../models/Category");
+const Category = require("../models/category.model");
 
 class CategoryController {
-  getAll = (req, res) => {
-    // Category.find()
-    //   .then((docs) => {
-    //     return res.status(200).send(docs);
-    //   })
-    //   .catch((err) => {
-    //     return res.status(500).send({ message: "Internal server error" });
-    //   });
-    res.send("Get all categories data");
+  add = async (req, res) => {
+    const data = new Category({
+      name: req.body.name,
+      price: req.body.price,
+      image: req.body.image,
+    });
+
+    try {
+      const dataTOSave = await data.save();
+      res.json({
+        status: 200,
+        message: "Data saved successfully",
+        data: dataTOSave,
+      });
+    } catch (err) {
+      res.json({ message: err.message });
+    }
   };
 
-  add = (req, res) => {
-    const body = req.body;
-    Category.create(body)
-      .then((doc) => {
-        //return res.status(200).send(doc)
-        return res.status(200).json({ msg: "I am get all product" });
-      })
-      .catch((err) => {
-        return res.status(500).send({ message: "Internal server error" });
+  getAll = async (req, res) => {
+    try {
+      const categoryData = await Category.find();
+      res.json({
+        status: 200,
+        message: "All data get successfully",
+        data: categoryData,
       });
+    } catch (err) {
+      res.json({ message: err.message });
+    }
+  };
+
+  getOne = async (req, res) => {
+    try {
+      const subCategoryData = await Category.findById(req.params.id);
+      res.json({
+        status: 200,
+        message: "Data retrieved successfully",
+        data: subCategoryData,
+      });
+    } catch (err) {
+      res.json({ message: err.message });
+    }
   };
 }
 
