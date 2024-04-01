@@ -1,10 +1,20 @@
 const express = require("express");
-const UserController = require("../controllers/user.controller");
-
+//const UserController = require("../controllers/user.controller");
+const {
+  addUser,
+  signin,
+  verifyToken,
+  refreshToken,
+  getUser,
+  logout,
+} = require("../controllers/user.controller");
 const userRouter = express.Router();
-const userController = new UserController();
+//const userController = new UserController();
 
-userRouter.post("/adduser", userController.addUser);
-userRouter.post("/signin", userController.signin);
+userRouter.post("/adduser", addUser);
+userRouter.post("/signin", signin);
+userRouter.get("/user", verifyToken, getUser);
+userRouter.get("/refresh", refreshToken, verifyToken, getUser);
+userRouter.post("/logout", verifyToken, logout);
 
 module.exports = userRouter;
