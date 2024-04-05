@@ -3,6 +3,7 @@ const router = express.Router();
 
 router.use("/category", require("./category.routes"));
 router.use("/user", require("./user.routes"));
+router.use("/product", require("./product.routes"));
 
 // const Category = require("../models/category.model");
 
