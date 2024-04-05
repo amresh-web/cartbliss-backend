@@ -3,19 +3,32 @@ const mongoose = require('mongoose');
 const categorySchema = new mongoose.Schema({
     name: {
         type: String,
-        required: [true, "Please enter product name"]
-    },
-    price: {
-        type: Number,
         required: true
     },
-    image: {
+    code: {
         type: String,
-       
+        required: true,
+        unique: true
     }
-},
-{
-    timestamps: true,
 });
 
-module.exports = mongoose.model('Category', categorySchema);
+const subCategorySchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    code: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    caegory: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category'
+    }
+});
+
+const Category =mongoose.model('Category', categorySchema);
+const SubCategory =mongoose.model('Subcategory', subCategorySchema);
+
+module.exports = {Category, SubCategory}
