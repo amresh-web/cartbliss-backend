@@ -1,50 +1,46 @@
-const Category = require("../models/category.model").default;
+const mongoose = require("mongoose");
+const { Category, SubCategory } = require("../models/category.model");
 
-class CategoryController {
-  add = async (req, res) => {
-    const data = new Category({
-      name: req.body.name,
-      price: req.body.price,
-      image: req.body.image,
-    });
-
-    try {
-      const dataTOSave = await data.save();
-      res.json({
-        status: 200,
-        message: "Data saved successfully",
-        data: dataTOSave,
-      });
-    } catch (err) {
-      res.json({ message: err.message });
-    }
-  };
-
-  getAll = async (req, res) => {
-    try {
-      const categoryData = await Category.find();
-      res.json({
-        status: 200,
-        message: "All data get successfully",
-        data: categoryData,
-      });
-    } catch (err) {
-      res.json({ message: err.message });
-    }
-  };
-
-  getOne = async (req, res) => {
-    try {
-      const subCategoryData = await Category.findById(req.params.id);
-      res.json({
-        status: 200,
-        message: "Data retrieved successfully",
-        data: subCategoryData,
-      });
-    } catch (err) {
-      res.json({ message: err.message });
-    }
-  };
+const createCategory = async (req, res) => {
+  try{
+    const {name, code} = req.body;
+    const category = new Category({name, code});
+    await category.save();
+    return res.json({
+      status: 201,
+      message: "Category created successfully",
+      code: category
+    })
+  } catch(err){
+    res.status(500).json({message: err.message});
+  }
 }
 
-module.exports = CategoryController;
+const createSubCategory = async (req, res) => {
+  try{
+    const {name, code, categoryId} = req.body;
+    const subCategory = new SubCategory({name, code,  category: categoryId});
+    console.log(subCategory)
+    await subCategory.save();
+    return res.json({
+      status: 201,
+      message: "Sub category created successfully",
+      code: subCategory
+    })
+  } catch(err){
+    res.status(500).json({message: err.message});
+  }
+}
+
+
+const getSubcategoryByCategoryId = async (categoryId) => {
+  try{
+    const subcategories = await SubCategory.find({category: categoryId});
+    console.log(subcategories);
+  }catch(err){
+    console.error('Failed to fetch subcategories:', err);
+    throw err;
+  }
+}
+
+module.exports = {createCategory, createSubCategory, getSubcategoryByCategoryId}
