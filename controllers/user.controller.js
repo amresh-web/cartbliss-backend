@@ -81,7 +81,7 @@ const signin = async (req, res) => {
   res.cookie(String(existingUser._id), token, {
     path: "/",
     expires: new Date(Date.now() + 1000 * 55),
-    httpOnly: true,
+    httpOnly: false,
     sameSite: "lax",
   });
 
@@ -135,7 +135,7 @@ const refreshToken = (req, res, next) => {
     res.cookie(String(user.id), token, {
       path: "/",
       expires: new Date(Date.now() + 1000 * 55), // 30 seconds
-      httpOnly: true,
+      httpOnly: false,
       sameSite: "lax",
     });
 
