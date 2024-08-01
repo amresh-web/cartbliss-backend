@@ -1,34 +1,46 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const categorySchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    code: {
-        type: String,
-        required: true,
-        unique: true
-    }
+const CategorySchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+  },
 });
 
-const subCategorySchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: true
-    },
-    code: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    caegory: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category'
-    }
+const BrandSchems = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  category: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
+    required: true,
+  },
 });
 
-const Category =mongoose.model('Category', categorySchema);
-const SubCategory =mongoose.model('Subcategory', subCategorySchema);
+const ModelSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand", required: true },
+  specification: {
+    processor: String,
+    ram: String,
+    storage: String,
+    color: String,
+    price: Number,
+    discount_price: Number,
+    discount_percentage: String,
+  },
+  images: [{ type: String, required: true }],
+});
 
-module.exports = {Category, SubCategory}
+const Category = mongoose.model("Category", CategorySchema);
+const Brand = mongoose.model("Brand", BrandSchems);
+const Model = mongoose.model("Model", ModelSchema);
+
+module.exports = { Category, Brand, Model };
