@@ -48,23 +48,16 @@ const upload = multer({ storage: storage });
 
 const createModel = async (req, res) => {
   try {
-    const imagePath = req.files.map(
+    const images = req.files.map(
       (file) => `/uploads/images/${file.originalname}`
     );
-
+    const specifications = JSON.parse(req.body.specifications);
+    console.log("Parsed Specifications:", specifications);
     const model = new Model({
       name: req.body.name,
       brand: req.body.brand,
-      specification: {
-        processor: req.body.processor,
-        ram: req.body.ram,
-        storage: req.body.storage,
-        color: req.body.color,
-        price: req.body.price,
-        discount_price: req.body.discount_price,
-        discount_percentage: req.body.discount_percentage,
-      },
-      images: imagePath,
+      specifications: specifications,
+      images,
     });
     console.log(model);
     await model.save();
@@ -77,6 +70,16 @@ const createModel = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+// specifications: {
+//         processor: req.body.processor,
+//         ram: req.body.ram,
+//         storage: req.body.storage,
+//         color: req.body.color,
+//         price: req.body.price,
+//         discount_price: req.body.discount_price,
+//         discount_percentage: req.body.discount_percentage,
+//       },
 
 const getCategory = async (req, res) => {
   try {
@@ -105,6 +108,20 @@ const getModel = async (req, res) => {
   }
 };
 
+const getModelByCategory = async (req, res) => {
+  console.log(req.params.categoryId);
+  try {
+    const model = await Model.find().populate({ path: "brand" });
+    const filterCategory = model.filter(
+      (brand) => brand.brand.category == req.params.categoryId
+    );
+    //const filterBrand = model.filter((brand)=> brand.brand == '66a3431b6807cf7d3aad113c');
+    res.json(filterCategory);
+  } catch (err) {
+    res.status(500).json({ err: err.message });
+  }
+};
+
 module.exports = {
   createCategory,
   createBrand,
@@ -113,4 +130,5 @@ module.exports = {
   getBrand,
   getModel,
   upload,
+  getModelByCategory,
 };
