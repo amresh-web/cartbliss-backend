@@ -27,7 +27,7 @@ const ModelSchema = new mongoose.Schema({
     required: true,
   },
   brand: { type: mongoose.Schema.Types.ObjectId, ref: "Brand", required: true },
-  specification: {
+  specifications: {
     processor: String,
     ram: String,
     storage: String,

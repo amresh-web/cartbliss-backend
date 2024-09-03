@@ -9,12 +9,20 @@ require("dotenv").config();
 require("./config/db");
 
 const app = express();
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(
+  cors({
+    credentials: true,
+    origin: "http://localhost:3000",
+  })
+);
 app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api", routes);
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(
+  "/uploads/images",
+  express.static(path.join(__dirname, "/uploads/images"))
+);
 
 const PORT = process.env.PORT || 5200;
 app.listen(PORT, () => {
