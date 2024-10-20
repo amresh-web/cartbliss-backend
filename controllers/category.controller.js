@@ -48,9 +48,7 @@ const upload = multer({ storage: storage });
 
 const createModel = async (req, res) => {
   try {
-    const images = req.files.map(
-      (file) => `/uploads/images/${file.originalname}`
-    );
+    const images = req.files.map((file) => file.originalname);
     const specifications = JSON.parse(req.body.specifications);
     console.log("Parsed Specifications:", specifications);
     const model = new Model({
