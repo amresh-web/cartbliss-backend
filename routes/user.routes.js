@@ -14,7 +14,7 @@ const userRouter = express.Router();
 userRouter.post("/adduser", addUser);
 userRouter.post("/signin", signin);
 userRouter.get("/user", verifyToken, getUser);
-userRouter.get("/refresh", refreshToken, verifyToken, getUser);
+userRouter.post("/refresh", refreshToken);
 userRouter.post("/logout", verifyToken, logout);
 
 module.exports = userRouter;
