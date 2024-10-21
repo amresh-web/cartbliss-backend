@@ -9,12 +9,18 @@ const {
   upload,
   getModelByCategory,
 } = require("../controllers/category.controller");
+const { verifyToken } = require("../middleware/verifyToken");
 
 const categoryRouter = express.Router();
 
-categoryRouter.post("/addcategory", createCategory);
-categoryRouter.post("/addbrand", createBrand);
-categoryRouter.post("/addmodel", upload.array("images", 10), createModel);
+categoryRouter.post("/addcategory", verifyToken, createCategory);
+categoryRouter.post("/addbrand", verifyToken, createBrand);
+categoryRouter.post(
+  "/addmodel",
+  verifyToken,
+  upload.array("images"),
+  createModel
+);
 categoryRouter.get("/getcategory", getCategory);
 categoryRouter.get("/getcategory/:categoryId/getbrand", getBrand);
 categoryRouter.get("/getbrand/:brandId/getmodel", getModel);

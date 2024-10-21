@@ -4,9 +4,10 @@
 /node_modules
 /.pnp
 .pnp.js
-/uploads
-/.env
+
 # misc
+/uploads
+.env
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

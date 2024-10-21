@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const { Category, Brand, Model } = require("../models/category.model");
 const multer = require("multer");
 const path = require("path");
+const { console } = require("inspector");
 
 const createCategory = async (req, res) => {
   try {
@@ -41,24 +42,29 @@ const storage = multer.diskStorage({
     callback(null, "uploads/images/");
   },
   filename: (req, file, callback) => {
-    callback(null, Date.now() + path.extname(file.originalname));
+    callback(
+      null,
+      file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+    );
   },
 });
 const upload = multer({ storage: storage });
 
 const createModel = async (req, res) => {
+  console.log("am", req.body);
   try {
-    const images = req.files.map((file) => file.originalname);
-    const specifications = JSON.parse(req.body.specifications);
-    console.log("Parsed Specifications:", specifications);
+    const images = req.files.map((file) => file.filename);
+    const specifications = JSON.parse(req.body.specifications || "{}");
+    console.log(specifications);
     const model = new Model({
       name: req.body.name,
       brand: req.body.brand,
-      specifications: specifications,
+      specifications,
       images,
     });
-    console.log(model);
+
     await model.save();
+
     return res.json({
       status: 201,
       message: "Model created successfully",
@@ -68,16 +74,6 @@ const createModel = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-// specifications: {
-//         processor: req.body.processor,
-//         ram: req.body.ram,
-//         storage: req.body.storage,
-//         color: req.body.color,
-//         price: req.body.price,
-//         discount_price: req.body.discount_price,
-//         discount_percentage: req.body.discount_percentage,
-//       },
 
 const getCategory = async (req, res) => {
   try {
@@ -98,6 +94,7 @@ const getBrand = async (req, res) => {
 };
 
 const getModel = async (req, res) => {
+  console.log("getmodel call");
   try {
     const models = await Model.find({ brand: req.params.brandId });
     res.json(models);

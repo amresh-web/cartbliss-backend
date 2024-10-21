@@ -4,11 +4,11 @@ const jwt = require("jsonwebtoken");
 const {
   generateAccessToken,
   generateRefreshToken,
-} = require("../services/authService");
+} = require("../utils/authService");
 const {
   getAccessTokenExpiryDate,
   getRefreshTokenExpiryDate,
-} = require("../config/config");
+} = require("../utils/config");
 
 const addUser = async (req, res) => {
   const {
@@ -99,75 +99,6 @@ const signin = async (req, res) => {
   }
 };
 
-const verifyToken = (req, res, next) => {
-  const accessToken = req.cookies.accessToken;
-
-  if (!accessToken) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  try {
-    const decoded = jwt.verify(accessToken, process.env.ACCESS_SECRET_KEY);
-    req.userId = decoded.userId;
-    next();
-  } catch (err) {
-    console.error("Error verifying access token:", err);
-    if (err.name === "TokenExpiredError") {
-      const refreshToken = req.cookies.refreshToken;
-
-      if (!refreshToken) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-      console.log(`Refresh token: ${refreshToken}`);
-      try {
-        const decodedRefresh = jwt.verify(
-          refreshToken,
-          process.env.ACCESS_SECRET_KEY
-        );
-        const newAccessToken = generateAccessToken(decodedRefresh.userId);
-        res.cookie("accessToken", newAccessToken, {
-          httpOnly: true,
-          sameSite: "strict",
-          expires: getAccessTokenExpiryDate(),
-        });
-
-        req.userId = decodedRefresh.userId;
-        next();
-      } catch (refreshError) {
-        console.error("Error verifying refresh token:", refreshError);
-        return res.status(401).json({ message: "Invalid refresh token" });
-      }
-    } else {
-      return res.status(401).json({ message: "Invalid access token" });
-    }
-  }
-};
-
-// Refresh token function
-const refreshToken = async (req, res) => {
-  const refreshToken = req.cookies.refreshToken;
-
-  if (!refreshToken) {
-    return res.status(403).json({ message: "Refresh token not provided" });
-  }
-
-  try {
-    const decoded = jwt.verify(refreshToken, process.env.ACCESS_SECRET_KEY);
-    const newAccessToken = generateAccessToken(decoded.userId);
-
-    res.cookie("accessToken", newAccessToken, {
-      httpOnly: true,
-      sameSite: "strict",
-      expires: getAccessTokenExpiryDate(),
-    });
-
-    return res.status(200).json({ accessToken: newAccessToken });
-  } catch (err) {
-    console.error("Error verifying refresh token refresh:", err);
-    return res.status(403).json({ message: "Invalid refresh token" });
-  }
-};
-
 const getUser = async (req, res) => {
   const userId = req.id;
   let user;
@@ -202,7 +133,5 @@ module.exports = {
   addUser,
   signin,
   getUser,
-  verifyToken,
-  refreshToken,
   logout,
 };

@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const {
   ACCESS_TOKEN_EXPIRE_TIME,
   REFRESH_TOKEN_EXPIRE_TIME,
-} = require("../config/config");
+} = require("./config");
 
 const generateAccessToken = (userId) => {
   console.log("Generating access token for user:", process.env.JWT_EXPIRE_IN);
