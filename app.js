@@ -19,12 +19,7 @@ app.use(cookieParser());
 app.use(express.json());
 
 app.use("/api", routes);
-// app.use(
-//   "/uploads/images",
-//   express.static(path.join(__dirname, "/uploads/images"))
-// );
-
-app.use("/images", express.static("uploads/images"));
+app.use(express.static("uploads"));
 
 const PORT = process.env.PORT || 5200;
 app.listen(PORT, () => {

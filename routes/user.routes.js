@@ -1,15 +1,13 @@
 const express = require("express");
-//const UserController = require("../controllers/user.controller");
 const {
   addUser,
   signin,
-  verifyToken,
-  refreshToken,
   getUser,
   logout,
 } = require("../controllers/user.controller");
+const { verifyToken } = require("../middleware/verifyToken");
+const { refreshToken } = require("../middleware/refreshToken");
 const userRouter = express.Router();
-//const userController = new UserController();
 
 userRouter.post("/adduser", addUser);
 userRouter.post("/signin", signin);
